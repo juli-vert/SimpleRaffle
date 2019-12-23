@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {align-items: center; margin-top: 300px;}
+            p1 {font-size: 25px; font-family: 'Courier New', Courier, monospace;}
+            .maindiv {
+                text-align: center;
+                width: 50%;
+                margin: auto;
+            }
+            button {
+                background-color: red; 
+                margin-top: 10px;
+                color: white; 
+                border: none; 
+                padding: 20px 40px;
+                border-radius: 5%;
+                cursor: pointer;}
+            button:hover {
+                background-color: violet;
+            }
+            .win {font-weight: 600;}
+        </style>
+    </head>
+    <body>
+        <div class="maindiv">
+            <div>
+                <p1 id="title"></p1><p1 class="win" id="p1win"></p1>
+            </div>
+            <div>
+                <button type="button" class="redbtn" onclick=random()>Press me</button>
+                <button type="button" class="redbtn" onclick=init()>Reset</button>
+            </div>
+        </div> 
+    <script>
+        const prizenumber = 3
+        let rounds = 0
+        let tickets = []
+        let choose = () => {
+            const winner = Math.floor(Math.random() * tickets.length)
+            document.getElementById("p1win").innerHTML = tickets[winner]
+            tickets.splice(winner, 1)
+            rounds += 1
+        }
+
+        let endgame = () => {
+            document.getElementById("title").innerHTML = "All Prizes are been given away"
+            document.getElementById("p1win").innerHTML = ""
+        }
+        let random = () => (rounds < prizenumber) ? choose() : endgame() 
+        let init = () => {
+            document.getElementById("title").innerHTML = "The winner is: "
+            document.getElementById("p1win").innerHTML = ""
+            tickets = ["Name1", 
+                        "Name2", 
+                        "Name3", 
+                        "Name4", 
+                        "Name5", 
+                        "Name6", 
+                        "Name7", 
+                        "Name8", 
+                        "Name9", 
+                        "Name0"]
+            rounds = 0
+        }
+        window.onload(init())
+    </script>
+    </body>
+</html>
