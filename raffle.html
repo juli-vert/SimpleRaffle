@@ -9,12 +9,23 @@
                 width: 50%;
                 margin: auto;
             }
+            input {
+                margin-top: 10px;
+                padding: 10px 20px;
+                border-color: red;
+                border-radius: 5px;
+            }
+            input:focus {
+                box-shadow: 0 0 5px;
+                background-color: violet;
+            }
             button {
                 background-color: red; 
                 margin-top: 10px;
                 color: white; 
                 border: none; 
                 padding: 20px 40px;
+                margin-left: 5px;
                 border-radius: 5%;
                 cursor: pointer;}
             button:hover {
@@ -24,23 +35,18 @@
         </style>
     </head>
     <body>
-        <div class="maindiv">
-            <div>
-                <p1 id="title"></p1><p1 class="win" id="p1win"></p1>
-            </div>
-            <div>
-                <button type="button" class="redbtn" onclick=random()>Press me</button>
-                <button type="button" class="redbtn" onclick=init()>Reset</button>
-            </div>
-        </div> 
+        <div class="maindiv" id="maindiv"></div> 
     <script>
-        const prizenumber = 3
+        const root = document.getElementById("maindiv")
+        let prizenumber = 0
         let rounds = 0
         let tickets = []
+        let auxtickets = []
+        
         let choose = () => {
-            const winner = Math.floor(Math.random() * tickets.length)
-            document.getElementById("p1win").innerHTML = tickets[winner]
-            tickets.splice(winner, 1)
+            const winner = Math.floor(Math.random() * auxtickets.length)
+            document.getElementById("p1win").innerHTML = auxtickets[winner]
+            auxtickets.splice(winner, 1)
             rounds += 1
         }
 
@@ -48,23 +54,99 @@
             document.getElementById("title").innerHTML = "All Prizes are been given away"
             document.getElementById("p1win").innerHTML = ""
         }
+        
         let random = () => (rounds < prizenumber) ? choose() : endgame() 
-        let init = () => {
+        
+        let reset = () => {
             document.getElementById("title").innerHTML = "The winner is: "
             document.getElementById("p1win").innerHTML = ""
-            tickets = ["Name1", 
-                        "Name2", 
-                        "Name3", 
-                        "Name4", 
-                        "Name5", 
-                        "Name6", 
-                        "Name7", 
-                        "Name8", 
-                        "Name9", 
-                        "Name0"]
+            auxtickets = [...tickets]
             rounds = 0
         }
-        window.onload(init())
+
+        let component_button = (cl, action, txt) => {
+            let newelement = document.createElement("button")
+            newelement.setAttribute("type", "button")
+            newelement.setAttribute("class", cl)
+            newelement.setAttribute("onclick", action)
+            newelement.innerText = txt
+            return newelement
+        }
+
+        let changeprizenumber = () => {
+            prizenumber = document.getElementById("participant").value
+            document.getElementById("participant").value = ""
+        }
+        
+        let addparticipant = () => {
+            const aux = document.getElementById("participant").value
+            tickets.includes(aux) ? alert("Participant already added") : tickets.push(aux)
+            document.getElementById("participant").value = ""
+        }
+
+        let clean = () => root.querySelectorAll('*').forEach(n => n.remove())
+
+        let start = () => {
+            let innerstart = () => {
+                clean()
+                auxtickets = [...tickets]
+                let newdiv = document.createElement("div")
+                let newelement = document.createElement("p1")
+                newelement.setAttribute("id", "title")
+                newelement.innerHTML = "The winner is: "
+                newdiv.appendChild(newelement)
+                newelement = document.createElement("p1")
+                newelement.setAttribute("id", "p1win")
+                newelement.setAttribute("class", "win")
+                newelement.innerHTML = ""
+                newdiv.appendChild(newelement)
+                root.appendChild(newdiv)
+                newdiv = document.createElement("div")
+                newdiv.appendChild(component_button("redbtn",  "random()", "Press Me"))
+                newdiv.appendChild(component_button("redbtn",  "reset()", "Reset"))
+                root.appendChild(newdiv)
+            }
+            prizenumber === 0 ? alert("There is no prizes number set") : innerstart()
+            
+        }
+
+        let setprizes = () => {
+            clean()
+            let newdiv = document.createElement("div")
+            let newelement = document.createElement("p1")
+            newelement.innerHTML = "How many give aways? "
+            newdiv.appendChild(newelement)
+            root.appendChild(newdiv)
+            newdiv = document.createElement("div")
+            newelement = document.createElement("input")
+            newelement.setAttribute("type", "number")
+            newelement.setAttribute("id", "participant")
+            newdiv.appendChild(newelement)
+            root.appendChild(newdiv)
+            newdiv = document.createElement("div")
+            newdiv.appendChild(component_button("redbtn",  "changeprizenumber()", "Set"))
+            newdiv.appendChild(component_button("redbtn",  "start()", "Start"))
+            root.appendChild(newdiv)
+        }
+
+        let init = () => {
+            let newdiv = document.createElement("div")
+            let newelement = document.createElement("p1")
+            newelement.innerHTML = "Add participant: "
+            newdiv.appendChild(newelement)
+            root.appendChild(newdiv)
+            newdiv = document.createElement("div")
+            newelement = document.createElement("input")
+            newelement.setAttribute("id", "participant")
+            newdiv.appendChild(newelement)
+            root.appendChild(newdiv)
+            newdiv = document.createElement("div")
+            newdiv.appendChild(component_button("redbtn",  "addparticipant()", "Add"))
+            newdiv.appendChild(component_button("redbtn",  "setprizes()", "Next Step"))
+            root.appendChild(newdiv)
+        }
+
+        window.onload = init()    
     </script>
     </body>
 </html>
