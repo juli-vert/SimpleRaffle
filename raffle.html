@@ -57,6 +57,14 @@
         
         let random = () => (rounds < prizenumber) ? choose() : endgame() 
         
+        let restart = () => {
+            clean()
+            tickets = []
+            prizenumber = 0
+            rounds = 0
+            init()
+        }
+
         let reset = () => {
             document.getElementById("title").innerHTML = "The winner is: "
             document.getElementById("p1win").innerHTML = ""
@@ -77,7 +85,7 @@
             prizenumber = document.getElementById("participant").value
             document.getElementById("participant").value = ""
         }
-        
+
         let addparticipant = () => {
             const aux = document.getElementById("participant").value
             tickets.includes(aux) ? alert("Participant already added") : tickets.push(aux)
@@ -104,6 +112,7 @@
                 newdiv = document.createElement("div")
                 newdiv.appendChild(component_button("redbtn",  "random()", "Press Me"))
                 newdiv.appendChild(component_button("redbtn",  "reset()", "Reset"))
+                newdiv.appendChild(component_button("redbtn",  "restart()", "Restart"))
                 root.appendChild(newdiv)
             }
             prizenumber === 0 ? alert("There is no prizes number set") : innerstart()
@@ -111,22 +120,26 @@
         }
 
         let setprizes = () => {
-            clean()
-            let newdiv = document.createElement("div")
-            let newelement = document.createElement("p1")
-            newelement.innerHTML = "How many give aways? "
-            newdiv.appendChild(newelement)
-            root.appendChild(newdiv)
-            newdiv = document.createElement("div")
-            newelement = document.createElement("input")
-            newelement.setAttribute("type", "number")
-            newelement.setAttribute("id", "participant")
-            newdiv.appendChild(newelement)
-            root.appendChild(newdiv)
-            newdiv = document.createElement("div")
-            newdiv.appendChild(component_button("redbtn",  "changeprizenumber()", "Set"))
-            newdiv.appendChild(component_button("redbtn",  "start()", "Start"))
-            root.appendChild(newdiv)
+            let innersetprizes = () => {
+                clean()
+                let newdiv = document.createElement("div")
+                let newelement = document.createElement("p1")
+                newelement.innerHTML = "How many give aways? "
+                newdiv.appendChild(newelement)
+                root.appendChild(newdiv)
+                newdiv = document.createElement("div")
+                newelement = document.createElement("input")
+                newelement.setAttribute("type", "number")
+                newelement.setAttribute("id", "participant")
+                newdiv.appendChild(newelement)
+                root.appendChild(newdiv)
+                newdiv = document.createElement("div")
+                newdiv.appendChild(component_button("redbtn",  "changeprizenumber()", "Set"))
+                newdiv.appendChild(component_button("redbtn",  "start()", "Start"))
+                root.appendChild(newdiv)
+            }
+            tickets.length < 2 ? alert("Not enough participants") : innersetprizes()
+            
         }
 
         let init = () => {
